@@ -4,4 +4,6 @@
   </Project>
   <Project Path="StudentApp.Desktop/StudentApp.Desktop.csproj" />
   <Project Path="StudentApp/StudentApp.csproj" />
+  <Project Path="StudentApp.ConsoleApp/StudentApp.ConsoleApp.csproj" />
+  <Project Path="StudentApp.Data/StudentApp.Data.csproj" />
 </Solution>
