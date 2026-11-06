@@ -3,16 +3,45 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:StudentApp.ViewModels"
+			 xmlns:data="clr-namespace:StudentApp.Data;assembly=StudentApp.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="StudentApp.Views.MainView"
              x:DataType="vm:MainViewModel">
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
-    </Design.DataContext>
+	<Grid RowDefinitions="Auto,*">
+		<TextBlock Text="Картинг-центр: Панель управления" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
 
-    <TextBox Text="{Binding Greeting}"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
+		<TabControl Grid.Row="1" Margin="10">
+
+			<TabItem Header="Клиенты">
+				<ListBox x:Name="ClientsList">
+					<ListBox.ItemTemplate>
+						<DataTemplate x:DataType="data:Client">
+							<TextBlock Text="{Binding}" Margin="5"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</TabItem>
+
+			<TabItem Header="Карты">
+				<ListBox x:Name="KartsList">
+					<ListBox.ItemTemplate>
+						<DataTemplate x:DataType="data:Kart">
+							<TextBlock Text="{Binding}" Margin="5"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</TabItem>
+
+			<TabItem Header="Заезды">
+				<ListBox x:Name="RacesList">
+					<ListBox.ItemTemplate>
+						<DataTemplate x:DataType="data:Race">
+							<TextBlock Text="{Binding}" Margin="5"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</TabItem>
+
+		</TabControl>
+	</Grid>
 </UserControl>
