@@ -3,43 +3,117 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:StudentApp.ViewModels"
-			 xmlns:data="clr-namespace:StudentApp.Data;assembly=StudentApp.Data"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:data="clr-namespace:StudentApp.Data;assembly=StudentApp.Data"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="StudentApp.Views.MainView"
              x:DataType="vm:MainViewModel">
+
 	<Grid RowDefinitions="Auto,*">
-		<TextBlock Text="Картинг-центр: Панель управления" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
+		<TextBlock Text="Картинг-центр: Управление" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
 
 		<TabControl Grid.Row="1" Margin="10">
 
 			<TabItem Header="Клиенты">
-				<ListBox x:Name="ClientsList">
-					<ListBox.ItemTemplate>
-						<DataTemplate x:DataType="data:Client">
-							<TextBlock Text="{Binding}" Margin="5"/>
-						</DataTemplate>
-					</ListBox.ItemTemplate>
-				</ListBox>
+				<Grid ColumnDefinitions="*, 300" Margin="10">
+					<ListBox x:Name="ClientsList" Grid.Column="0" SelectionChanged="ClientsList_SelectionChanged" Margin="0,0,10,0">
+						<ListBox.ItemTemplate>
+							<DataTemplate x:DataType="data:Client">
+								<TextBlock Text="{Binding}" Margin="5"/>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+
+					<StackPanel Grid.Column="1" Spacing="5">
+						<TextBlock Text="ФИО:"/>
+						<TextBox x:Name="ClientFullName" />
+						<TextBlock Text="Телефон:"/>
+						<TextBox x:Name="ClientPhone" />
+						<CheckBox x:Name="ClientIsMember" Content="Член клуба?"/>
+
+						<Button Content="Добавить" Click="AddClient_Click" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
+						<Button Content="Сохранить изменения" Click="SaveClient_Click" HorizontalAlignment="Stretch"/>
+						<Button Content="Удалить выбранного" Click="DeleteClient_Click" HorizontalAlignment="Stretch"/>
+
+						<TextBlock x:Name="ClientMessage" Foreground="Red" TextWrapping="Wrap" Margin="0,10,0,0"/>
+					</StackPanel>
+				</Grid>
 			</TabItem>
 
 			<TabItem Header="Карты">
-				<ListBox x:Name="KartsList">
-					<ListBox.ItemTemplate>
-						<DataTemplate x:DataType="data:Kart">
-							<TextBlock Text="{Binding}" Margin="5"/>
-						</DataTemplate>
-					</ListBox.ItemTemplate>
-				</ListBox>
+				<Grid ColumnDefinitions="*, 300" Margin="10">
+					<ListBox x:Name="KartsList" Grid.Column="0" Margin="0,0,10,0">
+						<ListBox.ItemTemplate>
+							<DataTemplate x:DataType="data:Kart">
+								<TextBlock Text="{Binding}" Margin="5"/>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+
+					<StackPanel Grid.Column="1" Spacing="5">
+						<TextBlock Text="Модель:"/>
+						<TextBox x:Name="KartModel" />
+						<TextBlock Text="Объем двигателя (см3):"/>
+						<TextBox x:Name="KartEngine" />
+						<TextBlock Text="Макс. скорость (км/ч):"/>
+						<TextBox x:Name="KartSpeed" />
+						<TextBlock Text="Цена за заезд (руб):"/>
+						<TextBox x:Name="KartPrice" />
+
+						<Button Content="Добавить" Click="AddKart_Click" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
+						<Button Content="Удалить выбранный" Click="DeleteKart_Click" HorizontalAlignment="Stretch"/>
+
+						<TextBlock x:Name="KartMessage" Foreground="Red" TextWrapping="Wrap" Margin="0,10,0,0"/>
+					</StackPanel>
+				</Grid>
 			</TabItem>
 
 			<TabItem Header="Заезды">
-				<ListBox x:Name="RacesList">
-					<ListBox.ItemTemplate>
-						<DataTemplate x:DataType="data:Race">
-							<TextBlock Text="{Binding}" Margin="5"/>
-						</DataTemplate>
-					</ListBox.ItemTemplate>
-				</ListBox>
+				<Grid ColumnDefinitions="*, 300" Margin="10">
+					<ListBox x:Name="RacesList" Grid.Column="0" Margin="0,0,10,0">
+						<ListBox.ItemTemplate>
+							<DataTemplate x:DataType="data:Race">
+								<TextBlock Text="{Binding}" Margin="5"/>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+
+					<StackPanel Grid.Column="1" Spacing="5">
+						<TextBlock Text="Клиент:"/>
+						<ComboBox x:Name="RaceClientCombo" HorizontalAlignment="Stretch">
+							<ComboBox.ItemTemplate>
+								<DataTemplate x:DataType="data:Client">
+									<TextBlock Text="{Binding FullName}"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+
+						<TextBlock Text="Карт:"/>
+						<ComboBox x:Name="RaceKartCombo" HorizontalAlignment="Stretch">
+							<ComboBox.ItemTemplate>
+								<DataTemplate x:DataType="data:Kart">
+									<TextBlock Text="{Binding Model}"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+
+						<TextBlock Text="Дата:"/>
+						<CalendarDatePicker x:Name="RaceDatePicker" HorizontalAlignment="Stretch"/>
+						<TextBlock Text="Время:"/>
+						<TimePicker x:Name="RaceTimePicker" HorizontalAlignment="Stretch"/>
+						<TextBlock Text="Кругов:"/>
+						<TextBox x:Name="RaceLaps" />
+						<TextBlock Text="Лучший круг (мс):"/>
+						<TextBox x:Name="RaceBestLap" />
+						<TextBlock Text="Итоговая цена (руб):"/>
+						<TextBox x:Name="RacePrice" />
+						<CheckBox x:Name="RaceIsFinished" Content="Завершён?"/>
+
+						<Button Content="Добавить" Click="AddRace_Click" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
+						<Button Content="Удалить выбранный" Click="DeleteRace_Click" HorizontalAlignment="Stretch"/>
+
+						<TextBlock x:Name="RaceMessage" Foreground="Red" TextWrapping="Wrap" Margin="0,10,0,0"/>
+					</StackPanel>
+				</Grid>
 			</TabItem>
 
 		</TabControl>
