@@ -4,82 +4,82 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:StudentApp.ViewModels"
              xmlns:data="clr-namespace:StudentApp.Data;assembly=StudentApp.Data"
-             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="800"
              x:Class="StudentApp.Views.MainView"
              x:DataType="vm:MainViewModel">
 
 	<Grid RowDefinitions="Auto,*">
-		<TextBlock Text="Картинг-центр: Управление" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
+		<TextBlock Text="Картинг-центр Апекс" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
 
-		<TabControl Grid.Row="1" Margin="10">
+		<TabControl Grid.Row="1" Margin="5">
 
 			<TabItem Header="Клиенты">
-				<Grid ColumnDefinitions="*, 300" Margin="10">
-					<ListBox x:Name="ClientsList" Grid.Column="0" SelectionChanged="ClientsList_SelectionChanged" Margin="0,0,10,0">
-						<ListBox.ItemTemplate>
-							<DataTemplate x:DataType="data:Client">
-								<TextBlock Text="{Binding}" Margin="5"/>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
+				<ScrollViewer>
+					<StackPanel Spacing="10" Margin="5">
+						<ListBox x:Name="ClientsList" MaxHeight="250" SelectionChanged="ClientsList_SelectionChanged">
+							<ListBox.ItemTemplate>
+								<DataTemplate x:DataType="data:Client">
+									<TextBlock Text="{Binding}" Margin="5"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
 
-					<StackPanel Grid.Column="1" Spacing="5">
 						<TextBlock Text="ФИО:"/>
-						<TextBox x:Name="ClientFullName" />
+						<TextBox x:Name="ClientFullName" MinHeight="40"/>
 						<TextBlock Text="Телефон:"/>
-						<TextBox x:Name="ClientPhone" />
-						<CheckBox x:Name="ClientIsMember" Content="Член клуба?"/>
+						<TextBox x:Name="ClientPhone" MinHeight="40"/>
+						<CheckBox x:Name="ClientIsMember" Content="Член клуба?" MinHeight="40"/>
 
-						<Button Content="Добавить" Click="AddClient_Click" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
-						<Button Content="Сохранить изменения" Click="SaveClient_Click" HorizontalAlignment="Stretch"/>
-						<Button Content="Удалить выбранного" Click="DeleteClient_Click" HorizontalAlignment="Stretch"/>
+						<Button Content="Добавить" Click="AddClient_Click" HorizontalAlignment="Stretch" MinHeight="40"/>
+						<Button Content="Сохранить изменения" Click="SaveClient_Click" HorizontalAlignment="Stretch" MinHeight="40"/>
+						<Button Content="Удалить выбранного" Click="DeleteClient_Click" HorizontalAlignment="Stretch" MinHeight="40"/>
 
 						<TextBlock x:Name="ClientMessage" Foreground="Red" TextWrapping="Wrap" Margin="0,10,0,0"/>
 					</StackPanel>
-				</Grid>
+				</ScrollViewer>
 			</TabItem>
 
 			<TabItem Header="Карты">
-				<Grid ColumnDefinitions="*, 300" Margin="10">
-					<ListBox x:Name="KartsList" Grid.Column="0" Margin="0,0,10,0">
-						<ListBox.ItemTemplate>
-							<DataTemplate x:DataType="data:Kart">
-								<TextBlock Text="{Binding}" Margin="5"/>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
+				<ScrollViewer>
+					<StackPanel Spacing="10" Margin="5">
+						<ListBox x:Name="KartsList" MaxHeight="250">
+							<ListBox.ItemTemplate>
+								<DataTemplate x:DataType="data:Kart">
+									<TextBlock Text="{Binding}" Margin="5"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
 
-					<StackPanel Grid.Column="1" Spacing="5">
 						<TextBlock Text="Модель:"/>
-						<TextBox x:Name="KartModel" />
+						<TextBox x:Name="KartModel" MinHeight="40"/>
 						<TextBlock Text="Объем двигателя (см3):"/>
-						<TextBox x:Name="KartEngine" />
+						<TextBox x:Name="KartEngine" MinHeight="40"/>
 						<TextBlock Text="Макс. скорость (км/ч):"/>
-						<TextBox x:Name="KartSpeed" />
+						<TextBox x:Name="KartSpeed" MinHeight="40"/>
 						<TextBlock Text="Цена за заезд (руб):"/>
-						<TextBox x:Name="KartPrice" />
+						<TextBox x:Name="KartPrice" MinHeight="40"/>
 
-						<Button Content="Добавить" Click="AddKart_Click" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
-						<Button Content="Удалить выбранный" Click="DeleteKart_Click" HorizontalAlignment="Stretch"/>
+						<Button Content="Добавить" Click="AddKart_Click" HorizontalAlignment="Stretch" MinHeight="40"/>
+						<Button Content="Удалить выбранный" Click="DeleteKart_Click" HorizontalAlignment="Stretch" MinHeight="40"/>
 
 						<TextBlock x:Name="KartMessage" Foreground="Red" TextWrapping="Wrap" Margin="0,10,0,0"/>
 					</StackPanel>
-				</Grid>
+				</ScrollViewer>
 			</TabItem>
 
 			<TabItem Header="Заезды">
-				<Grid ColumnDefinitions="*, 300" Margin="10">
-					<ListBox x:Name="RacesList" Grid.Column="0" Margin="0,0,10,0">
-						<ListBox.ItemTemplate>
-							<DataTemplate x:DataType="data:Race">
-								<TextBlock Text="{Binding}" Margin="5"/>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
+				<ScrollViewer>
+					<StackPanel Spacing="10" Margin="5">
+						<ListBox x:Name="RacesList" MaxHeight="250">
+							<ListBox.ItemTemplate>
+								<DataTemplate x:DataType="data:Race">
+									<TextBlock Text="{Binding}" Margin="5"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
 
-					<StackPanel Grid.Column="1" Spacing="5">
 						<TextBlock Text="Клиент:"/>
-						<ComboBox x:Name="RaceClientCombo" HorizontalAlignment="Stretch">
+						<ComboBox x:Name="RaceClientCombo" HorizontalAlignment="Stretch" MinHeight="40">
 							<ComboBox.ItemTemplate>
 								<DataTemplate x:DataType="data:Client">
 									<TextBlock Text="{Binding FullName}"/>
@@ -88,7 +88,7 @@
 						</ComboBox>
 
 						<TextBlock Text="Карт:"/>
-						<ComboBox x:Name="RaceKartCombo" HorizontalAlignment="Stretch">
+						<ComboBox x:Name="RaceKartCombo" HorizontalAlignment="Stretch" MinHeight="40">
 							<ComboBox.ItemTemplate>
 								<DataTemplate x:DataType="data:Kart">
 									<TextBlock Text="{Binding Model}"/>
@@ -97,23 +97,23 @@
 						</ComboBox>
 
 						<TextBlock Text="Дата:"/>
-						<CalendarDatePicker x:Name="RaceDatePicker" HorizontalAlignment="Stretch"/>
+						<CalendarDatePicker x:Name="RaceDatePicker" HorizontalAlignment="Stretch" MinHeight="40"/>
 						<TextBlock Text="Время:"/>
-						<TimePicker x:Name="RaceTimePicker" HorizontalAlignment="Stretch"/>
+						<TimePicker x:Name="RaceTimePicker" HorizontalAlignment="Stretch" MinHeight="40"/>
 						<TextBlock Text="Кругов:"/>
-						<TextBox x:Name="RaceLaps" />
+						<TextBox x:Name="RaceLaps" MinHeight="40"/>
 						<TextBlock Text="Лучший круг (мс):"/>
-						<TextBox x:Name="RaceBestLap" />
+						<TextBox x:Name="RaceBestLap" MinHeight="40"/>
 						<TextBlock Text="Итоговая цена (руб):"/>
-						<TextBox x:Name="RacePrice" />
-						<CheckBox x:Name="RaceIsFinished" Content="Завершён?"/>
+						<TextBox x:Name="RacePrice" MinHeight="40"/>
+						<CheckBox x:Name="RaceIsFinished" Content="Завершен?" MinHeight="40"/>
 
-						<Button Content="Добавить" Click="AddRace_Click" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
-						<Button Content="Удалить выбранный" Click="DeleteRace_Click" HorizontalAlignment="Stretch"/>
+						<Button Content="Добавить" Click="AddRace_Click" HorizontalAlignment="Stretch" MinHeight="40"/>
+						<Button Content="Удалить выбранный" Click="DeleteRace_Click" HorizontalAlignment="Stretch" MinHeight="40"/>
 
 						<TextBlock x:Name="RaceMessage" Foreground="Red" TextWrapping="Wrap" Margin="0,10,0,0"/>
 					</StackPanel>
-				</Grid>
+				</ScrollViewer>
 			</TabItem>
 
 		</TabControl>

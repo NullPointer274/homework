@@ -6,7 +6,7 @@ using Avalonia.Android;
 namespace StudentApp.Android;
 
 [Activity(
-    Label = "StudentApp.Android",
+    Label = "Картинг-центр Апекс",
     Theme = "@style/MyTheme.NoActionBar",
     Icon = "@drawable/icon",
     MainLauncher = true,
