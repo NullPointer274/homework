@@ -112,9 +112,17 @@ public partial class MainView : UserControl
             return;
         }
 
+        using var db = new AppDbContext();
+
+        bool hasRaces = db.Races.Any(r => r.ClientId == selected.Id);
+        if (hasRaces)
+        {
+            ClientMessage.Text = "Ошибка: Нельзя удалить клиента, у него есть заезды!";
+            return;
+        }
+
         try
         {
-            using var db = new AppDbContext();
             var clientToDelete = db.Clients.Find(selected.Id);
             if (clientToDelete != null)
             {
@@ -125,6 +133,17 @@ public partial class MainView : UserControl
             }
         }
         catch (Exception ex) { ClientMessage.Text = $"Ошибка при удалении (возможно, у клиента есть заезды): {ex.Message}"; }
+    }
+
+    private void KartsList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (KartsList.SelectedItem is Kart kart)
+        {
+            KartModel.Text = kart.Model;
+            KartEngine.Text = kart.EngineVolume.ToString();
+            KartSpeed.Text = kart.MaxSpeed.ToString();
+            KartPrice.Text = kart.PricePerRace.ToString();
+        }
     }
 
     private void AddKart_Click(object? sender, RoutedEventArgs e)
@@ -149,6 +168,40 @@ public partial class MainView : UserControl
         catch (Exception ex) { KartMessage.Text = $"Ошибка БД: {ex.Message}"; }
     }
 
+    private void SaveKart_Click(object? sender, RoutedEventArgs e)
+    {
+        if (!(KartsList.SelectedItem is Kart selected))
+        {
+            KartMessage.Text = "Ошибка: Выберите карт в списке!";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(KartModel.Text) ||
+            !int.TryParse(KartEngine.Text, out int engine) ||
+            !int.TryParse(KartSpeed.Text, out int speed) ||
+            !int.TryParse(KartPrice.Text, out int price))
+        {
+            KartMessage.Text = "Ошибка: Проверьте числа и заполните модель!";
+            return;
+        }
+
+        try
+        {
+            using var db = new AppDbContext();
+            var kartToUpdate = db.Karts.Find(selected.Id);
+            if (kartToUpdate != null)
+            {
+                kartToUpdate.Model = KartModel.Text;
+                kartToUpdate.EngineVolume = engine;
+                kartToUpdate.MaxSpeed = speed;
+                kartToUpdate.PricePerRace = price;
+                db.SaveChanges();
+                KartMessage.Text = "Карт обновлен!";
+                RefreshLists();
+            }
+        }
+        catch (Exception ex) { KartMessage.Text = $"Ошибка БД: {ex.Message}"; }
+    }
+
     private void DeleteKart_Click(object? sender, RoutedEventArgs e)
     {
         if (!(KartsList.SelectedItem is Kart selected))
@@ -157,9 +210,17 @@ public partial class MainView : UserControl
             return;
         }
 
+        using var db = new AppDbContext();
+
+        bool hasRaces = db.Races.Any(r => r.KartId == selected.Id);
+        if (hasRaces)
+        {
+            KartMessage.Text = "Ошибка: Нельзя удалить карт, у него есть заезды!";
+            return;
+        }
+
         try
         {
-            using var db = new AppDbContext();
             var k = db.Karts.Find(selected.Id);
             if (k != null)
             {
@@ -170,6 +231,22 @@ public partial class MainView : UserControl
             }
         }
         catch (Exception ex) { KartMessage.Text = $"Ошибка БД: {ex.Message}"; }
+    }
+
+    private void RacesList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (RacesList.SelectedItem is Race race)
+        {
+            RaceClientCombo.SelectedItem = RaceClientCombo.ItemsSource?.Cast<Client>().FirstOrDefault(c => c.Id == race.ClientId);
+            RaceKartCombo.SelectedItem = RaceKartCombo.ItemsSource?.Cast<Kart>().FirstOrDefault(k => k.Id == race.KartId);
+
+            RaceDatePicker.SelectedDate = race.StartTime.Date;
+            RaceTimePicker.SelectedTime = race.StartTime.TimeOfDay;
+            RaceLaps.Text = race.Laps.ToString();
+            RaceBestLap.Text = race.BestLapMs.ToString();
+            RacePrice.Text = race.TotalPrice.ToString();
+            RaceIsFinished.IsChecked = race.IsFinished;
+        }
     }
 
     private void AddRace_Click(object? sender, RoutedEventArgs e)
@@ -214,6 +291,45 @@ public partial class MainView : UserControl
             db.SaveChanges();
             RaceMessage.Text = "Заезд добавлен!";
             RefreshLists();
+        }
+        catch (Exception ex) { RaceMessage.Text = $"Ошибка БД: {ex.Message}"; }
+    }
+
+    private void SaveRace_Click(object? sender, RoutedEventArgs e)
+    {
+        if (!(RacesList.SelectedItem is Race selected))
+        {
+            RaceMessage.Text = "Ошибка: Выберите заезд в списке!";
+            return;
+        }
+        if (!(RaceClientCombo.SelectedItem is Client client) || !(RaceKartCombo.SelectedItem is Kart kart) || RaceDatePicker.SelectedDate == null)
+        {
+            RaceMessage.Text = "Ошибка: Выберите клиента, карт и дату!";
+            return;
+        }
+        if (!int.TryParse(RaceLaps.Text, out int laps) || !int.TryParse(RaceBestLap.Text, out int bestLap) || !int.TryParse(RacePrice.Text, out int price))
+        {
+            RaceMessage.Text = "Ошибка: Проверьте числа!";
+            return;
+        }
+
+        try
+        {
+            using var db = new AppDbContext();
+            var raceToUpdate = db.Races.Find(selected.Id);
+            if (raceToUpdate != null)
+            {
+                raceToUpdate.ClientId = client.Id;
+                raceToUpdate.KartId = kart.Id;
+                raceToUpdate.StartTime = RaceDatePicker.SelectedDate.Value.Date + (RaceTimePicker.SelectedTime ?? TimeSpan.Zero);
+                raceToUpdate.Laps = laps;
+                raceToUpdate.BestLapMs = bestLap;
+                raceToUpdate.TotalPrice = price;
+                raceToUpdate.IsFinished = RaceIsFinished.IsChecked ?? false;
+                db.SaveChanges();
+                RaceMessage.Text = "Заезд обновлен!";
+                RefreshLists();
+            }
         }
         catch (Exception ex) { RaceMessage.Text = $"Ошибка БД: {ex.Message}"; }
     }
